@@ -31,6 +31,14 @@ class ProducerByID(Resource):
             return make_response({"error": "Resource not found"}, 404)
         return make_response(producer.to_dict(), 200)
 
+    def delete(self, id):
+        producer = Producer.query.filter(Producer.id == id).first()
+        if not producer:
+            return make_response({"error": "Resource not found"}, 404)
+        db.session.delete(producer)
+        db.session.commit()
+        return make_response("", 204)
+
 
 api.add_resource(Producers, "/producers")
 api.add_resource(ProducerByID, "/producers/<int:id>")
