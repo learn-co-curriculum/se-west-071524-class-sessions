@@ -1,4 +1,5 @@
 import datetime
+from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
@@ -80,13 +81,16 @@ class Cheese(db.Model, SerializerMixin, TimestampMixin):
 
     serialize_rules = ("-create_at", "-update_at", "-producer.cheeses")
 
-    @validates
+    @validates("production_date")
     def production_in_past(self, key, date):
-        if not date < datetime.datetime.now():
+        prod_date = (
+            date if isinstance(date, datetime) else datetime.strptime(date, "%Y-%m-%d")
+        )
+        if not prod_date < datetime.now():
             raise ValueError("Cheeses must be produced before today")
         return date
 
-    @validates
+    @validates("price")
     def price_range(self, key, price):
         if not 1.00 <= price <= 45.00:
             raise ValueError("Price must be between 1.00 and 45.00")

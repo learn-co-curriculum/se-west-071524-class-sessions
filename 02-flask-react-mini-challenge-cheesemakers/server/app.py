@@ -1,4 +1,7 @@
-from flask import Flask, jsonify, make_response, request
+from datetime import datetime
+
+import ipdb
+from flask import Flask, abort, jsonify, make_response, request
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
@@ -40,8 +43,62 @@ class ProducerByID(Resource):
         return make_response("", 204)
 
 
+class Cheeses(Resource):
+    def post(self):
+        req_dict = request.get_json()
+        # ipdb.set_trace()
+        try:
+            format = "%Y-%m-%d"
+            req_dict["production_date"] = datetime.strptime(
+                req_dict["production_date"], format
+            )
+            new_cheese = Cheese(**req_dict)
+        except ValueError as e:
+            # abort(422, e.args[0])
+            return make_response({"errors": ["validation errors"]}, 422)
+        db.session.add(new_cheese)
+        db.session.commit()
+        return make_response(
+            new_cheese.to_dict(
+                rules=(
+                    "-producer.founding_year",
+                    "-producer.id",
+                    "-producer.image",
+                    "-producer.operation_size",
+                    "-producer.region",
+                )
+            ),
+            200,
+        )
+
+
+class CheeseByID(Resource):
+    def patch(self, id):
+        cheese = Cheese.query.get(id)
+        if not cheese:
+            return make_response({"errors": ["validation errors"]}, 422)
+        req_json = request.get_json()
+        for attr, value in req_json.items():
+            if attr == "production_date":
+                value = datetime.strptime(value, "%Y-%m-%d")
+            setattr(cheese, attr, value)
+        db.session.add(cheese)
+        db.session.commit()
+        return make_response(cheese.to_dict(rules=("-producer",)), 202)
+
+    def delete(self, id):
+        cheese = Cheese.query.get(id)
+        if not cheese:
+            return make_response({"error": "Resource not found"}, 404)
+        db.session.delete(cheese)
+        db.session.commit()
+        return make_response("", 204)
+
+
 api.add_resource(Producers, "/producers")
 api.add_resource(ProducerByID, "/producers/<int:id>")
+api.add_resource(Cheeses, "/cheeses")
+api.add_resource(CheeseByID, "/cheeses/<int:id>")
 
 
 if __name__ == "__main__":
