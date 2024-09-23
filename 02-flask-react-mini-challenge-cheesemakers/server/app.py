@@ -20,17 +20,20 @@ api = Api(app)
 class Producers(Resource):
     def get(self):
         producers = Producer.query.all()
-        prod_dicts = [prod.to_dict() for prod in producers]
+        prod_dicts = [prod.to_dict(rules=("-cheeses",)) for prod in producers]
         return make_response(prod_dicts, 200)
 
 
+class ProducerByID(Resource):
+    def get(self, id):
+        producer = Producer.query.filter(Producer.id == id).first()
+        if not producer:
+            return make_response({"error": "Resource not found"}, 404)
+        return make_response(producer.to_dict(), 200)
+
+
 api.add_resource(Producers, "/producers")
-
-
-@app.route("/")
-def index():
-    response = make_response({"message": "Hello Fromagers!"}, 200)
-    return response
+api.add_resource(ProducerByID, "/producers/<int:id>")
 
 
 if __name__ == "__main__":

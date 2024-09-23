@@ -37,7 +37,9 @@ class Producer(db.Model, SerializerMixin, TimestampMixin):
     operation_size = db.Column(db.String)
     image = db.Column(db.String)
 
-    serialize_rules = ("-create_at", "-update_at")
+    cheeses = db.relationship("Cheese", back_populates="producer")
+
+    serialize_rules = ("-create_at", "-update_at", "-cheeses.producer")
 
     @validates("name")
     def name_required(self, key, name):
@@ -73,6 +75,10 @@ class Cheese(db.Model, SerializerMixin, TimestampMixin):
     image = db.Column(db.String)
     price = db.Column(db.Float)
     producer_id = db.Column(db.Integer, db.ForeignKey("producers.id"))
+
+    producer = db.relationship("Producer", back_populates="cheeses")
+
+    serialize_rules = ("-create_at", "-update_at", "-producer.cheeses")
 
     @validates
     def production_in_past(self, key, date):
