@@ -17,6 +17,16 @@ db.init_app(app)
 api = Api(app)
 
 
+class Producers(Resource):
+    def get(self):
+        producers = Producer.query.all()
+        prod_dicts = [prod.to_dict() for prod in producers]
+        return make_response(prod_dicts, 200)
+
+
+api.add_resource(Producers, "/producers")
+
+
 @app.route("/")
 def index():
     response = make_response({"message": "Hello Fromagers!"}, 200)

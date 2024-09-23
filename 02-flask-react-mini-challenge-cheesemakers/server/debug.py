@@ -4,6 +4,15 @@ from models import *
 
 # alternative to flask shell
 if __name__ == "__main__":
-    import ipdb
+    with app.app_context():
+        producer1 = Producer(
+            name="Beckhams",
+            founding_year=1889,
+            region="Wales",
+            operation_size="mega",
+            image="beckhams.jpg",
+        )
 
-    ipdb.set_trace()
+        import ipdb
+
+        ipdb.set_trace()
