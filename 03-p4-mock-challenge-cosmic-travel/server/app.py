@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
-from models import db, Scientist, Mission, Planet
-from flask_restful import Api, Resource
-from flask_migrate import Migrate
-from flask import Flask, make_response, jsonify, request
 import os
+
+from flask import Flask, jsonify, make_response, request
+from flask_migrate import Migrate
+from flask_restful import Api, Resource
+from models import Mission, Planet, Scientist, db
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DATABASE = os.environ.get(
@@ -16,7 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 
-migrate = Migrate(app, db)
+migrate = Migrate(app, db, render_as_batch=True)
 
 db.init_app(app)
 
