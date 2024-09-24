@@ -95,9 +95,11 @@ api.add_resource(Missions, "/missions")
 
 @app.errorhandler(NotFound)
 def handle_404(exception):
-    path = request.path
-    cleaned_path = ''.join(char for char in path if char.isalpha())[:-1]
-    response = make_response({"error": f"{cleaned_path.title()} not found"}, 404)
+    # path = request.path
+    # cleaned_path = ''.join(char for char in path if char.isalpha())[:-1]
+    # response = make_response({"error": f"{cleaned_path.title()} not found"}, 404)
+    print(exception)
+    response = make_response({"error": f"{request.path.rstrip('1234567890/s').lstrip('/').title()} not found"})
     return response
 
 
