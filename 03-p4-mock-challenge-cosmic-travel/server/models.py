@@ -42,9 +42,11 @@ class Scientist(db.Model, SerializerMixin):
 
     # Add relationship
     missions = db.relationship("Mission", back_populates="scientist", cascade="all, delete-orphan")
+    # planets = association_proxy('missions', 'planet')
     
 
     # Add serialization rules
+    serialize_rules=("-missions.scientist",) # make sure it's a tuple
 
     # Add validation
     @validates("name", "field_of_study")
@@ -68,7 +70,7 @@ class Mission(db.Model, SerializerMixin):
 
     # Add serialization rules
 
-    serialize_rules=("-planet.missions",)
+    serialize_rules=("-planet.missions", "-scientist.missions")
 
     # Add validation
     @validates("name", "scientist_id", "planet_id")
