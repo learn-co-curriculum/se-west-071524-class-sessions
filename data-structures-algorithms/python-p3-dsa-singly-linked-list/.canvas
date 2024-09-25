@@ -1,0 +1,10 @@
+---
+:lessons:
+- :id: 209675
+  :course_id: 5935
+  :canvas_url: https://learning.flatironschool.com/courses/5935/pages/singly-linked-list-data-structure
+  :type: page
+- :id: 297341
+  :course_id: 7559
+  :canvas_url: https://learning.flatironschool.com/courses/7559/pages/singly-linked-list-data-structure
+  :type: page
