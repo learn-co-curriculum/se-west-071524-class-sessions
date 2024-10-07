@@ -10,7 +10,7 @@ export default function Budget() {
 
   const handleAddTen = () => dispatch(addTen())
 
-  const handleSubtract = () => console.log("subtract clicked")
+  const handleSubtract = () => dispatch(subtractAmount(5))
 
   return (
     <div>
