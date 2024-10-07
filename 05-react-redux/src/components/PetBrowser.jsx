@@ -14,7 +14,7 @@ function PetBrowser() {
 
   return (
     <div>
-      <div className="ui cards">{petCards}</div>
+      {/* <div className="ui cards">{petCards}</div> */}
     </div>
   );
 }

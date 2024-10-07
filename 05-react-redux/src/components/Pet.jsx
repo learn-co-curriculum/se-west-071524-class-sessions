@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 // import { adoptPet } from '../features/pets/petsSlice'
-import { useUpdatePetsMutation } from "../app/services/petsApi";
+// import { useUpdatePetsMutation } from "../app/services/petsApi";
 
 export default function Pet({ pet }) {
 
